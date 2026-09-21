@@ -1,0 +1,6 @@
+node_modules
+__pycache__
+.pytest_cache
+._*
+.DS_Store
+tests/on_chain/.smoke-keys.json

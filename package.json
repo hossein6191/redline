@@ -1,0 +1,14 @@
+{
+  "name": "redline-smoke",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Dependencies of tests/on_chain/smoke.mjs only; the contracts need none.",
+  "type": "module",
+  "scripts": {
+    "smoke": "node tests/on_chain/smoke.mjs"
+  },
+  "dependencies": {
+    "genlayer-js": "1.1.8",
+    "viem": "2.56.8"
+  }
+}
