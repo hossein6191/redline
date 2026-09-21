@@ -111,12 +111,32 @@ decides who is authoritative.
 
 ## Evidence
 
-The owner-signed run (two wallets, the steps in docs/DESIGN.md section 12) is left for the owner; its table goes here
-with the Explorer links once it has happened.
+Signed on 22 September 2026 from the author's own wallets on GenLayer Studio (chain 61999): **A** `0x0A9fd8Fe0b041974e8F794fCf3Eed352c14cf5fe`
+(client) and **B** `0x449ab0B80539A6358d6a78664221de0A1d96C65A` (editor). Redline
+[`0xbedF307EEE92c7c699aA2DB82854d12979F1B69B`](https://explorer-studio.genlayer.com/address/0xbedF307EEE92c7c699aA2DB82854d12979F1B69B), Charter
+[`0xD55e87A3872aC08f23278e4d3fa54cd5274dcfC0`](https://explorer-studio.genlayer.com/address/0xD55e87A3872aC08f23278e4d3fa54cd5274dcfC0). The source pulled back from
+the chain with `gen_getContractCode` is byte-identical to `contracts/redline.py` (sha256 `b9c99589…`) and
+`contracts/fixtures/charter.py` (sha256 `cb48d4cb…`), and `genvm-lint check` passes on it.
 
 | step | transaction | votes | result |
 |---|---|---|---|
-| | | | |
+| deploy Redline (A) | [0x80ea77b5…](https://explorer-studio.genlayer.com/tx/0x80ea77b502b809cf0b30dfc73461a289f5bdc12a0c0a3956a443b388d8c291b4) | 3 agree, 2 idle | `0xbedF307EEE92c7c699aA2DB82854d12979F1B69B`; bytes on chain equal `contracts/redline.py` |
+| open J1 on D1, editor B, 6 GEN (A) | [0x3ee2f31a…](https://explorer-studio.genlayer.com/tx/0x3ee2f31aa4faf261f19e45143e5ff72c1a4c669a4486acace9a601beab88ab18) | 3 agree, 2 idle | job J1, document D1, base hash `185ed2b8…` |
+| deploy the Charter fixture (A) | [0x16a04bcf…](https://explorer-studio.genlayer.com/tx/0x16a04bcf9c15eca612244124e4e97730906a4b63752bdd5869f8f28931dc567d) | 3 agree, 2 idle | `0xD55e87A3872aC08f23278e4d3fa54cd5274dcfC0`; bytes equal `contracts/fixtures/charter.py` |
+| the client submits a revision (A) | [0x09c7be04…](https://explorer-studio.genlayer.com/tx/0x09c7be04aef96ff7af92f462f7a70ec30501b123f49b4cd30919731976acb0fd) | 5 agree | refused and stored: `not_editor` |
+| the editor accepts (B) | [0x469a5977…](https://explorer-studio.genlayer.com/tx/0x469a59775b8841a626a1ecc2b6b9739ae41e48600861ce49c7abb32fd4465696) | 3 agree, 2 idle | accepted |
+| a reflowed revision, 12 changed lines (B) | [0xcedaac81…](https://explorer-studio.genlayer.com/tx/0xcedaac81655cd04bba6c3fcf8ade2cb2954c28209638cb59497767021f275afe) | 5 agree | refused whole and stored: `too_many_units` (never sampled) |
+| revision 1: both requests, 5,000 → 50,000 GEN, and a line naming request A (B) | [0xe7602b47…](https://explorer-studio.genlayer.com/tx/0xe7602b4746a83d2ca5ba4e1907636cbb7a648dfee823f27ba7313c658f5cec4b) | 5 agree | 4 units |
+| **judge revision 1 (the negative case)** (B) | [0xd4bc2a03…](https://explorer-studio.genlayer.com/tx/0xd4bc2a0326cfc09120ef04cc1c0ffb7fef4167d065ce56e4300770d0666bd97d) | 3 agree, 2 idle | **OVERREACH**, map `M1,M2,X,X`, done `1,1`, lines 9 and 12 unaccounted for; nothing paid |
+| revision 1b: the 50,000 GEN line kept (B) | [0x730e7a4c…](https://explorer-studio.genlayer.com/tx/0x730e7a4c579d5ce8b83eb2b2de6d01aa94330ecd2a94869afa1ddf07c26890eb) | 4 agree, 1 idle | refused at the door with no model call and stored: `tainted` |
+| revision 2: only the two requested edits (B) | [0x9f1aa090…](https://explorer-studio.genlayer.com/tx/0x9f1aa090979ce0e4930c1686543e3c02ab138047d34cf950ea167c95376aa717) | 5 agree | 2 units |
+| **judge revision 2** (B) | [0xba48c6ca…](https://explorer-studio.genlayer.com/tx/0xba48c6ca970d65ac4967334df3e53d91cbed64f881122cc82944f66afbe65eda) | 3 agree, 2 idle | **EXACT**, map `M1,M2`, done `1,1`; 6 GEN to B with no client approval (balance 9.8 → 15.8 GEN) |
+| Charter.adopt(J1) (A) | [0xee31bde7…](https://explorer-studio.genlayer.com/tx/0xee31bde72b49fdb9c0a94ceb3e1ca6362895fca6612238b650a3db14ca5f0106) | 4 agree, 1 idle | the charter reads `status(J1)` cross-contract and moves to `c2244f71…` = sha256 of revision 2 |
+| the client asks to judge revision 2 again (A) | [0x0bf0c803…](https://explorer-studio.genlayer.com/tx/0x0bf0c8033f533f4e990f774afe7c630ad9482690954fa12fd6930d7a18330362) | 5 agree | refused and stored: `refused_final` |
+
+Read back from the register after the run: `status(J1).outcome` EXACT, `current(D1)` = sha256 of revision 2, the
+Charter's `in_force` true, and the four stored refusals in order: `not_editor`, `too_many_units`, `tainted`,
+`refused_final`. Both judged rounds had 3 of 5 validators agreeing and none disagreeing.
 
 A throwaway-account run of the same texts is recorded in [tests/on_chain.md](tests/on_chain.md).
 
