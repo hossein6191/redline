@@ -111,7 +111,7 @@ decides who is authoritative.
 
 ## Evidence
 
-Signed on 22 September 2026 from the author's own wallets on GenLayer Studio (chain 61999): **A** `0x0A9fd8Fe0b041974e8F794fCf3Eed352c14cf5fe`
+Signed on 21 September 2026 from the author's own wallets on GenLayer Studio (chain 61999): **A** `0x0A9fd8Fe0b041974e8F794fCf3Eed352c14cf5fe`
 (client) and **B** `0x449ab0B80539A6358d6a78664221de0A1d96C65A` (editor). Redline
 [`0xbedF307EEE92c7c699aA2DB82854d12979F1B69B`](https://explorer-studio.genlayer.com/address/0xbedF307EEE92c7c699aA2DB82854d12979F1B69B), Charter
 [`0xD55e87A3872aC08f23278e4d3fa54cd5274dcfC0`](https://explorer-studio.genlayer.com/address/0xD55e87A3872aC08f23278e4d3fa54cd5274dcfC0). The source pulled back from
